@@ -67,6 +67,10 @@ namespace RecetArreAPI2.Context
                     .HasMaxLength(100)//aqui se establece una longitud máxima de 100 caracteres para el campo Descripcion
                     .IsRequired(false);
 
+                entity.Property(e => e.CreadoUtc)
+                    .IsRequired()
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
                 // Relación con ApplicationUser
                 entity.HasOne(e => e.CreadoPorUsuario)//un ingrediente es creado por un usuario
                     .WithMany()//usuario puede crear muchos ingredientes

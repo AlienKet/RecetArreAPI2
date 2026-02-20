@@ -19,6 +19,7 @@ namespace RecetArreAPI2.Models
         [StringLength(100)]//descripcion del ingrediente, 500 caracteres maximo
         public string? Descripcion { get; set; }//Descripcion del ingrediente
 
+        public DateTime CreadoUtc { get; set; } = DateTime.UtcNow;
 
         // Relación con ApplicationUser (quién creó la categoría)
         [ForeignKey("ApplicationUser")]

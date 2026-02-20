@@ -15,6 +15,7 @@
         public string UnidadMedida { get; set; } = default!;
 
         public string? Descripcion { get; set; } // ? significa que es opcional
+        public DateTime CreadoUtc { get; set; }
     }
 
     public class IngredienteCreacionDto //DTO para crear ingredientes
