@@ -32,9 +32,9 @@ namespace RecetArreAPI2.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoriaDto>>> GetCategorias()
         {
-            var categorias = await context.Categorias
-                .OrderByDescending(c => c.CreadoUtc)
-                .ToListAsync();
+            var categorias = await context.Categorias//Accedemos a la tabla Categorias de la base de datos a través del contexto
+                .OrderByDescending(c => c.CreadoUtc)//OrderByDescending se utiliza para ordenar las categorías por la fecha de creación en orden descendente
+                .ToListAsync();//ToListAsync() se utiliza para ejecutar la consulta y obtener los resultados como una lista de categorías
 
             return Ok(mapper.Map<List<CategoriaDto>>(categorias));
         }
@@ -60,7 +60,8 @@ namespace RecetArreAPI2.Controllers
         {
             // Validar que el nombre no esté duplicado
             var existe = await context.Categorias
-                .AnyAsync(c => c.Nombre.ToLower() == categoriaCreacionDto.Nombre.ToLower());
+                .AnyAsync(c => c.Nombre.ToLower() == categoriaCreacionDto.Nombre.ToLower());//AnyAsync devuelve true si encuentra al menos un elemento que cumple la condición
+            //ToLower() se utiliza para convertir el nombre a minúsculas
 
             if (existe)
             {
