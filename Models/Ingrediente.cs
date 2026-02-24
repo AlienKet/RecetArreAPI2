@@ -17,7 +17,8 @@ namespace RecetArreAPI2.Models
         //default! se usa para indicar que el valor no puede ser null, pero no se asigna un valor inicial, se espera que se asigne antes de usar la propiedad
 
         [StringLength(100)]//descripcion del ingrediente, 500 caracteres maximo
-        public string? Descripcion { get; set; }//Descripcion del ingrediente
+        public string? Descripcion { get; set; }//Descripcion del ingrediente 
+        //? puede ser null
 
         public DateTime CreadoUtc { get; set; } = DateTime.UtcNow;
 

@@ -78,7 +78,7 @@ namespace RecetArreAPI2.Context
                     .OnDelete(DeleteBehavior.SetNull)//si el usuario que creó el ingrediente es eliminado, se establece el valor de CreadoPorUsuarioId a null
                     .IsRequired(false);//el campo CreadoPorUsuarioId no es obligatorio
 
-                //Indices
+                //Indices unicos para evitar duplicados y mejorar el rendimiento de las consultas
                 entity.HasIndex(e => e.Nombre).IsUnique();// Índice único en el nombre del ingrediente
                     entity.HasIndex(e => e.CreadoPorUsuarioId);// Índice en el campo CreadoPorUsuarioId para mejorar el rendimiento de las consultas que filtran por este campo
 
