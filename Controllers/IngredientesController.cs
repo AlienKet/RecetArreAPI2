@@ -35,6 +35,7 @@ namespace RecetArreAPI2.Controllers
                  //HttpGes significa que este método se ejecutará cuando se realice una solicitud GET a la ruta "api/ingredientes"
         public async Task<ActionResult<IEnumerable<IngredienteDto>>> GetIngredientes()//este método devuelve una lista de ingredientes en formato DTO (Data Transfer Object)
         {//async es para indicar que este método es asíncrono, lo que permite que se realicen operaciones de manera no bloqueante, como acceder a la base de datos
+            //IEnumerable es para indicar que el método devuelve una colección de objetos, en este caso, una lista de ingredientes en formato DTO
             var ingredientes = await context.Ingredientes//aqui se accede a la base de datos para obtener la lista de ingredientes
                 .OrderByDescending(i => i.CreadoUtc)//aqui se ordena la lista de ingredientes por la fecha de creación en orden descendente
                 .ToListAsync();//aqui se convierte el resultado de la consulta a una lista de ingredientes
