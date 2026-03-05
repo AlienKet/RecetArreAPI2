@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 //en power shell: dotnet run --launch-profile https
+//cd C:\Users\elneg\source\repos\RecetArreAPI2\RecetArreAPI2
 //https://localhost:7019/scalar/v1
 
 builder.Services.AddControllers();
@@ -70,6 +71,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 app.UseAuthorization();
