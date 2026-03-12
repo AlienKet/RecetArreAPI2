@@ -19,8 +19,6 @@ namespace RecetArreAPI2.Models
         [ForeignKey("Tiempo")]
         public string idTiempo { get; set; };
 
-        [ForeignKey("Usuario")]
-        public string idUsuario { get; set; };
 
         public DateTime CreadoUtc { get; set; } = DateTime.UtcNow;
 
