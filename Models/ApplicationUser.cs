@@ -5,7 +5,7 @@ namespace RecetArreAPI2.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        
+
         [StringLength(500)]
         public string? Biografia { get; set; }
 
@@ -27,5 +27,8 @@ namespace RecetArreAPI2.Models
 
         public DateTime CreadoUtc { get; set; } = DateTime.UtcNow;
         public DateTime ModificadoUtc { get; set; } = DateTime.UtcNow;
+
+        public ICollection<Receta> RecetasPublicadas { get; set; } = new List<Receta>();
+        public ICollection<Comentario> Comentarios { get; set; } = new List<Comentario>();
     }
 }

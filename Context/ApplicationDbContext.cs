@@ -13,6 +13,8 @@ namespace RecetArreAPI2.Context
 
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Ingrediente> Ingredientes { get; set; }
+        public DbSet<Receta> Recetas { get; set; }
+        public DbSet<Comentario> Comentarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -24,8 +26,6 @@ namespace RecetArreAPI2.Context
                 entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Nombre)
-
-
                     .IsRequired()
                     .HasMaxLength(100);
 
@@ -38,54 +38,117 @@ namespace RecetArreAPI2.Context
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 // Relación con ApplicationUser
-                entity.HasOne(e => e.CreadoPorUsuario)//una categoría es creada por un usuario
+                entity.HasOne(e => e.CreadoPorUsuario)
                     .WithMany()
                     .HasForeignKey(e => e.CreadoPorUsuarioId)
                     .OnDelete(DeleteBehavior.SetNull)
                     .IsRequired(false);
 
                 // Índices
-                entity.HasIndex(e => e.Nombre).IsUnique();// Índice único en el nombre de la categoría
+                entity.HasIndex(e => e.Nombre).IsUnique();
                 entity.HasIndex(e => e.CreadoPorUsuarioId);
             });
 
-            //Configuracion de Ingrediente
+            // Configuración de Ingrediente
             builder.Entity<Ingrediente>(entity =>
             {
-                entity.HasKey(e => e.Id);//aqui se define la clave primaria de la tabla Ingredientes
+                entity.HasKey(e => e.Id);
 
-                entity.Property(e => e.Nombre)//aqui se define la propiedad Nombre del modelo Ingrediente
-                    .IsRequired()//aqui se indica que el campo Nombre es obligatorio
-                    .HasMaxLength(100);//aqui se establece una longitud máxima de 100 caracteres para el campo Nombre
-
-                entity.Property(e => e.UnidadMedida)//aqui se define la propiedad UnidadMedida del modelo Ingrediente
+                entity.Property(e => e.Nombre)
                     .IsRequired()
-                    .HasMaxLength(15);
+                    .HasMaxLength(80);
 
-
-                entity.Property(e=>e.Descripcion)//aqui se define la propiedad Descripcion del modelo Ingrediente
-                    .HasMaxLength(100)//aqui se establece una longitud máxima de 100 caracteres para el campo Descripcion
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(100)
                     .IsRequired(false);
 
                 entity.Property(e => e.CreadoUtc)
                     .IsRequired()
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                // Relación con ApplicationUser
-                entity.HasOne(e => e.CreadoPorUsuario)//un ingrediente es creado por un usuario
-                    .WithMany()//usuario puede crear muchos ingredientes
-                    .HasForeignKey(e => e.CreadoPorUsuarioId)//la clave foránea es CreadoPorUsuarioId
-                    .OnDelete(DeleteBehavior.SetNull)//si el usuario que creó el ingrediente es eliminado, se establece el valor de CreadoPorUsuarioId a null
-                    .IsRequired(false);//el campo CreadoPorUsuarioId no es obligatorio
-
-                //Indices unicos para evitar duplicados y mejorar el rendimiento de las consultas
-                entity.HasIndex(e => e.Nombre).IsUnique();// Índice único en el nombre del ingrediente
-                    entity.HasIndex(e => e.CreadoPorUsuarioId);// Índice en el campo CreadoPorUsuarioId para mejorar el rendimiento de las consultas que filtran por este campo
-
+                // Índice único para evitar nombres duplicados
+                entity.HasIndex(e => e.Nombre).IsUnique();
             });
 
-            }
+            // Configuración de Receta
+            builder.Entity<Receta>(entity =>
+            {
+                entity.HasKey(e => e.Id);
 
+                entity.Property(e => e.Titulo)
+                    .IsRequired()
+                    .HasMaxLength(120);
 
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(1000)
+                    .IsRequired(false);
+
+                entity.Property(e => e.Instrucciones)
+                    .IsRequired()
+                    .HasMaxLength(15000);
+
+                entity.Property(e => e.Porciones)
+                    .HasDefaultValue(1);
+
+                entity.Property(e => e.EstaPublicado)
+                    .HasDefaultValue(true);
+
+                entity.Property(e => e.CreadoUtc)
+                    .IsRequired()
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.ModificadoUtc)
+                    .IsRequired()
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.HasOne(e => e.Autor)
+                    .WithMany(u => u.RecetasPublicadas)
+                    .HasForeignKey(e => e.AutorId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
+                entity.HasMany(e => e.Categorias)
+                    .WithMany(c => c.Recetas)
+                    .UsingEntity(j => j.ToTable("RecetaCategorias"));
+
+                entity.HasMany(e => e.Ingredientes)
+                    .WithMany(i => i.Recetas)
+                    .UsingEntity(j => j.ToTable("RecetaIngredientes"));
+
+                entity.HasIndex(e => e.AutorId);
+                entity.HasIndex(e => e.CreadoUtc);
+                entity.HasIndex(e => e.EstaPublicado);
+            });
+
+            // Configuración de Comentario
+            builder.Entity<Comentario>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Contenido)
+                    .IsRequired()
+                    .HasMaxLength(1000);
+
+                entity.Property(e => e.CreadoUtc)
+                    .IsRequired()
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.HasOne(e => e.Receta)
+                    .WithMany(r => r.Comentarios)
+                    .HasForeignKey(e => e.RecetaId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                entity.HasOne(e => e.Usuario)
+                    .WithMany(u => u.Comentarios)
+                    .HasForeignKey(e => e.UsuarioId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired();
+
+                entity.HasIndex(e => e.RecetaId);
+                entity.HasIndex(e => e.UsuarioId);
+                entity.HasIndex(e => e.CreadoUtc);
+            });
+        }
     }
 }

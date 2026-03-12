@@ -1,27 +1,54 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 
 namespace RecetArreAPI2.Models
 {
-       public class Receta
+    public class Receta
     {
+        //cd C:\Users\elneg\source\repos\RecetArreAPI2\RecetArreAPI2
+        //dotnet ef migrations add TRecetas_TComentarios
+        //dotnet ef database update
+        //dotnet build
+
+
+        //dotnet run --launch-profile https
+        //https://localhost:7019/scalar/v1
+
+        //"email": "alien123@gmail.com",
+        // "password": "Alien123!"
+
         public int Id { get; set; }
 
         [Required]
-        [StringLength(100, MinimumLength = 2)]
-        public string Nombre { get; set; } = default!;
+        [StringLength(120, MinimumLength = 3)]
+        public string Titulo { get; set; } = default!;
+
+        [StringLength(1000)]
+        public string? Descripcion { get; set; }
 
         [Required]
-        [StringLength(600, MinimumLength = 2)]
-        publis string Instrucciones { get; set; };
+        [StringLength(15000)]
+        public string Instrucciones { get; set; } = default!;
 
-        [ForeignKey("Tiempo")]
-        public string idTiempo { get; set; };
+        [Range(0, 24 * 60)]
+        public int TiempoPreparacionMinutos { get; set; }
 
+        [Range(0, 24 * 60)]
+        public int TiempoCoccionMinutos { get; set; }
+
+        [Range(1, 100)]
+        public int Porciones { get; set; } = 1;
+
+        public bool EstaPublicado { get; set; } = true;
 
         public DateTime CreadoUtc { get; set; } = DateTime.UtcNow;
+        public DateTime ModificadoUtc { get; set; } = DateTime.UtcNow;
 
+        [Required]
+        public string AutorId { get; set; } = default!;
+
+        public ApplicationUser Autor { get; set; } = default!;
+        public ICollection<Categoria> Categorias { get; set; } = new List<Categoria>();
+        public ICollection<Ingrediente> Ingredientes { get; set; } = new List<Ingrediente>();
+        public ICollection<Comentario> Comentarios { get; set; } = new List<Comentario>();
     }
-
 }

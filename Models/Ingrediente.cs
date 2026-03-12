@@ -29,5 +29,7 @@ namespace RecetArreAPI2.Models
 
         public ApplicationUser? CreadoPorUsuario { get; set; }
 
+        public ICollection<Receta> Recetas { get; set; } = new List<Receta>();
+
     }
 }
