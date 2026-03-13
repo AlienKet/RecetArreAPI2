@@ -16,6 +16,7 @@ namespace RecetArreAPI2.Models
         //"email": "alien123@gmail.com",
         // "password": "Alien123!"
 
+        //Bare
         public int Id { get; set; }
 
         [Required]
