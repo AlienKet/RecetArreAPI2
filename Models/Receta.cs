@@ -4,19 +4,6 @@ namespace RecetArreAPI2.Models
 {
     public class Receta
     {
-        //cd C:\Users\elneg\source\repos\RecetArreAPI2\RecetArreAPI2
-        //dotnet ef migrations add TRecetas_TComentarios
-        //dotnet ef database update
-        //dotnet build
-
-
-        //dotnet run --launch-profile https
-        //https://localhost:7019/scalar/v1
-
-        //"email": "alien123@gmail.com",
-        // "password": "Alien123!"
-
-        //Bare
         public int Id { get; set; }
 
         [Required]
