@@ -4,6 +4,7 @@ Abrir PowerShell de windows
 cd C:\Users\elneg\source\repos\RecetArreAPI2\RecetArreAPI2
 
 dotnet run --launch-profile https
+
 https://localhost:7019/scalar/v1
 
 **ver errores:**
@@ -21,6 +22,7 @@ Bearer tokenGenerado
 3-Migración    
 dotnet ef migrations add TRecetas_TComentarios
 dotnet ef database update
+
 4-DTOs
 5-AutoMapper
 6-Controlador 
@@ -47,4 +49,8 @@ por ejemplo de `Comentario` a `ComentarioDto` sin tener que hacerlo manualmente 
 
 6-Controlador:Es donde defines los endpoints de la API, 
 es decir las rutas a las que el frontend puede hacer peticiones como 
-`GET /api/comentarios`, `POST /api/comentarios`, `DELETE /api/comentarios/{id}`, etc.
+`GET /api/comentarios`, `POST /api/comentarios`, `DELETE /api/comentarios/{id}`
+
+
+Ranking: Cual es la mejor receta
+Raiting: Puntuacion de la receta en estrellas

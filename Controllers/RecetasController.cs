@@ -34,6 +34,7 @@ namespace RecetArreAPI2.Controllers
             var recetas = await context.Recetas
                 .Include(r => r.Categorias)
                 .Include(r => r.Ingredientes)
+                .Include(r => r.Ratings)
                 .OrderByDescending(r => r.CreadoUtc)
                 .ToListAsync();
 
@@ -52,6 +53,7 @@ namespace RecetArreAPI2.Controllers
             var recetas = await context.Recetas
                 .Include(r => r.Categorias)
                 .Include(r => r.Ingredientes)
+                .Include(r => r.Ratings)
                 .Where(r => r.Categorias.Any(c => ids.Contains(c.Id)))
                 .OrderByDescending(r => r.CreadoUtc)
                 .ToListAsync();
@@ -71,6 +73,7 @@ namespace RecetArreAPI2.Controllers
             var recetas = await context.Recetas
                 .Include(r => r.Categorias)
                 .Include(r => r.Ingredientes)
+                .Include(r => r.Ratings)
                 .Where(r => r.Ingredientes.Any(i => ids.Contains(i.Id)))
                 .OrderByDescending(r => r.CreadoUtc)
                 .ToListAsync();
@@ -84,6 +87,7 @@ namespace RecetArreAPI2.Controllers
             var receta = await context.Recetas
                 .Include(r => r.Categorias)
                 .Include(r => r.Ingredientes)
+                .Include(r => r.Ratings)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             if (receta == null)

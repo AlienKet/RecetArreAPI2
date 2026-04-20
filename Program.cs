@@ -10,10 +10,7 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//en power shell: dotnet run --launch-profile https
-//cd C:\Users\elneg\source\repos\RecetArreAPI2\RecetArreAPI2
-//https://localhost:7019/scalar/v1
+
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -29,7 +26,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
 //Conexion a la base de datos
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //Configurar JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

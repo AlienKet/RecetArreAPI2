@@ -15,6 +15,7 @@ namespace RecetArreAPI2.Context
         public DbSet<Ingrediente> Ingredientes { get; set; }
         public DbSet<Receta> Recetas { get; set; }
         public DbSet<Comentario> Comentarios { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -149,6 +150,35 @@ namespace RecetArreAPI2.Context
                 entity.HasIndex(e => e.UsuarioId);
                 entity.HasIndex(e => e.CreadoUtc);
             });
+
+            // Configuración de Rating
+            builder.Entity<Rating>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Calificacion)
+                    .IsRequired();
+
+                entity.Property(e => e.FechaCreacion)
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                // Relación con Receta
+                entity.HasOne(e => e.Receta)
+                    .WithMany(r => r.Ratings)
+                    .HasForeignKey(e => e.RecetaId)
+                    .OnDelete(DeleteBehavior.Cascade); // Si se borra la receta, se borran sus ratings
+
+                // Relación con Usuario
+                entity.HasOne(e => e.Usuario)
+                    .WithMany() // Un usuario puede tener muchos ratings
+                    .HasForeignKey(e => e.UsuarioId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                // Evita que un usuario califique la misma receta más de una vez
+                entity.HasIndex(e => new { e.UsuarioId, e.RecetaId }).IsUnique();
+            });
+
+
         }
     }
 }

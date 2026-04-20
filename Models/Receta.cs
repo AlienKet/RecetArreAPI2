@@ -38,5 +38,6 @@ namespace RecetArreAPI2.Models
         public ICollection<Categoria> Categorias { get; set; } = new List<Categoria>();
         public ICollection<Ingrediente> Ingredientes { get; set; } = new List<Ingrediente>();
         public ICollection<Comentario> Comentarios { get; set; } = new List<Comentario>();
+        public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
     }
 }

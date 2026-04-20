@@ -17,6 +17,8 @@ namespace RecetArreAPI2.DTOs.Recetas
         public string AutorId { get; set; } = default!;
         public List<int> CategoriaIds { get; set; } = new();
         public List<int> IngredienteIds { get; set; } = new();
+
+        public double PromedioCalificacion { get; set; }
     }
 
     public class RecetaCreacionDto
@@ -45,6 +47,8 @@ namespace RecetArreAPI2.DTOs.Recetas
 
         public List<int> CategoriaIds { get; set; } = new();
         public List<int> IngredienteIds { get; set; } = new();
+
+    
     }
 
     public class RecetaModificacionDto
@@ -73,5 +77,6 @@ namespace RecetArreAPI2.DTOs.Recetas
 
         public List<int> CategoriaIds { get; set; } = new();
         public List<int> IngredienteIds { get; set; } = new();
+
     }
 }
