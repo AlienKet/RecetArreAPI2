@@ -82,10 +82,32 @@ RatingsController.cs (Controla las puntuaciones de estrellas de las recetas)
 RecetasController.cs (El núcleo del negocio: gestión integral de platos)
 
 
-ORM significa Object-Relational Mapping (Mapeo Objeto-Relational). 
+--ORM significa Object-Relational Mapping (Mapeo Objeto-Relational). 
 Es una técnica de programación y una herramienta de software que actúa 
 como un "traductor" o un puente entre dos mundos que hablan idiomas 
 completamente diferentes, Objetos y Bases de Datos Relacionales.
 
 
+--Subir el Backend (.NET API) a Somee
+1.Publicar en local: En Visual Studio, haz clic derecho sobre tu proyecto 
+RecetArreAPI2 -> Publicar (Publish) -> Selecciona Carpeta (Folder).
 
+2.Generar archivos: Compila y genera los archivos finales en esa carpeta local.
+
+3.Subir a Somee: Entra al panel de Somee.com, ve al File Manager de tu sitio web,
+y sube todo el contenido de esa carpeta (puedes subirlo comprimido en .zip y 
+descomprimirlo allí mismo).
+
+En program.cs configurar cors: 
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+       // builder.WithOrigins("https://tu-aplicacion-recetas.vercel.app") //url de vercel
+        builder.AllowAnyOrigin() // Permite cualquier origen (Front)
+                .AllowAnyMethod() // Permite GET, POST, etc.
+                .AllowAnyHeader(); // Permite enviar el Token JWT
+    });
+});
