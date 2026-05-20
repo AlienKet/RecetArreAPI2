@@ -54,3 +54,38 @@ es decir las rutas a las que el frontend puede hacer peticiones como
 
 Ranking: Cual es la mejor receta
 Raiting: Puntuacion de la receta en estrellas
+
+
+http://pruebabd2026.somee.com/scalar/v1
+
+http://pruebabd2026.somee.com/web/
+
+..Host
+Servidor de Hosting: Somee.com
+
+--Base de Datos y ORM (BDD)
+Motor de Base de Datos (BDD): Microsoft SQL Server 
+
+ORM (Object-Relational Mapper): Entity Framework Core (EF Core)
+
+--Framework y Lenguaje
+Framework principal: .NET Web API (.NET Core)
+Lenguaje de Programación: C# (C-Sharp)
+--Controladores (Controllers)
+Son los encargados de recibir las peticiones HTTP del Front y retornar las respuestas en formato JSON.
+
+CategoriasController.cs (Gestiona CRUD de categorías)
+ComentariosController.cs (Gestiona opiniones y textos de recetas)
+CuentasController.cs (Controla el registro, login y tokens JWT de usuarios)
+IngredientesController.cs (Gestiona CRUD de insumos y unidades de medida)
+RatingsController.cs (Controla las puntuaciones de estrellas de las recetas)
+RecetasController.cs (El núcleo del negocio: gestión integral de platos)
+
+
+ORM significa Object-Relational Mapping (Mapeo Objeto-Relational). 
+Es una técnica de programación y una herramienta de software que actúa 
+como un "traductor" o un puente entre dos mundos que hablan idiomas 
+completamente diferentes, Objetos y Bases de Datos Relacionales.
+
+
+

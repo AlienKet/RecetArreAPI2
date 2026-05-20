@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
 builder.Services.AddOpenApi();
 
 // Configurar AutoMapper
@@ -52,22 +52,29 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
     {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+        builder.AllowAnyOrigin() // Permite cualquier origen (Front)
+                .AllowAnyMethod() // Permite GET, POST, etc.
+                .AllowAnyHeader(); // Permite enviar el Token JWT
     });
 });
 
 var app = builder.Build();
 
+app.MapOpenApi();
+app.MapScalarApiReference(options =>
+{
+    options.WithTitle("RecetArre API")
+           .WithTheme(ScalarTheme.Moon)
+           .WithOpenApiRoutePattern("/openapi/v1.json");
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
