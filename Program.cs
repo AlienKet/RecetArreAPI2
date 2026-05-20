@@ -52,8 +52,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
     {
-        builder.WithOrigins("https://recet-arre-web-l3sb.vercel.app") //url de vercel
-        //builder.AllowAnyOrigin() // Permite cualquier origen (Front)
+       // builder.WithOrigins("https://recet-arre-web-l3sb.vercel.app") //url de vercel
+        builder.AllowAnyOrigin() // Permite cualquier origen (Front)
                 .AllowAnyMethod() // Permite GET, POST, etc.
                 .AllowAnyHeader(); // Permite enviar el Token JWT
     });
