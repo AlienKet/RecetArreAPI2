@@ -4,27 +4,36 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RecetArreAPI2.Context;
 using RecetArreAPI2.Models;
-using Scalar.AspNetCore;
 using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Añadimos OpenAPI y AutoMapper
-builder.Services.AddOpenApi();
+// 1. Servicios básicos y AutoMapper
+builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+// --- AQUÍ ACTIVAMOS SWAGGER EN LOS SERVICIOS ---
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // 2. Configurar la seguridad de Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// 3. Conexion a la base de datos
+// 3. Conexión a la base de datos (Leyendo tu appsettings de Somee)
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    if (!string.IsNullOrEmpty(connectionString))
+    {
+        options.UseSqlServer(connectionString);
+    }
+});
 
-// 4. Configurar JWT (Con un salvavidas por si la configuración llega nula a Somee)
-var llaveSecreta = builder.Configuration["LlaveJWT"] ?? "ClaveAlternativaSeguraDeMasDe32CaracteresParaEvitarCrash";
+// 4. Configurar JWT
+var llaveSecreta = builder.Configuration["LlaveJWT"] ?? "IZbM86D4!LOX%a7z$AXsdvfrrHyBDyhRTUuikX@5B@NL52rRergc54!$%kSÑOKJIAUSFCIK.LQAWIUJJAV5S748D63VC2!";
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opciones => opciones.TokenValidationParameters = new TokenValidationParameters
     {
@@ -36,12 +45,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ClockSkew = TimeSpan.Zero
     });
 
-// 5. Configuramos los controladores una SOLA vez con sus opciones
+// 5. Configurar Controladores e ignorar ciclos
 builder.Services.AddControllers()
     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
     .AddNewtonsoftJson();
 
-// 6. Configurar Cors
+// 6. Configurar CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
@@ -54,19 +63,22 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// 7. Mapear rutas de documentación
-app.MapOpenApi();
-app.MapScalarApiReference(options =>
+
+// A. ACTIVAMOS CORS PRIMERO QUE NADA
+app.UseCors("AllowAll");
+
+// B. LEVANTAMOS SWAGGER (Sin importar si es Desarrollo o Producción)
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    options.WithTitle("RecetArre API")
-           .WithTheme(ScalarTheme.Moon)
-           .WithOpenApiRoutePattern("/openapi/v1.json");
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "RecetArre API V1");
+    options.RoutePrefix = "swagger"; // Esto define que entraremos mediante /swagger
 });
 
-// Dejamos las redirecciones e IFs apagados para Somee
-app.UseCors("AllowAll");
+// C. Seguridad y Controladores
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
