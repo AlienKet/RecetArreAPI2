@@ -2,6 +2,7 @@
 
 namespace RecetArreAPI2.Models
 {
+    //En esta clase se definen las propiedades de una receta 
     public class Receta
     {
         public int Id { get; set; }

@@ -10,7 +10,9 @@ using RecetArreAPI2.Models;
 
 namespace RecetArreAPI2.Controllers
 {
-    [ApiController]
+    [ApiController]//indica que esta clase es un controlador de API,
+     //lo que habilita características como la validación automática del modelo
+     //y la serialización de respuestas
     [Route("api/[controller]")]
     public class RecetasController : ControllerBase
     {
@@ -28,7 +30,7 @@ namespace RecetArreAPI2.Controllers
             this.userManager = userManager;
         }
 
-        [HttpGet]
+        [HttpGet]//aqui se puede agregar un filtro para mostrar solo las recetas publicadas o las del usuario autenticado
         public async Task<ActionResult<IEnumerable<RecetaDto>>> GetRecetas()
         {
             var recetas = await context.Recetas
@@ -41,7 +43,7 @@ namespace RecetArreAPI2.Controllers
             return Ok(mapper.Map<List<RecetaDto>>(recetas));
         }
 
-        [HttpGet("filtrar/categorias")]
+        [HttpGet("filtrar/categorias")]//aqui se filtran las categorías por los ids enviados en la query string,
         public async Task<ActionResult<IEnumerable<RecetaDto>>> FiltrarPorCategorias([FromQuery] List<int> categoriaIds)
         {
             if (categoriaIds == null || categoriaIds.Count == 0)
@@ -61,7 +63,7 @@ namespace RecetArreAPI2.Controllers
             return Ok(mapper.Map<List<RecetaDto>>(recetas));
         }
 
-        [HttpGet("filtrar/ingredientes")]
+        [HttpGet("filtrar/ingredientes")]//aqui se puede agregar un filtro para mostrar solo las recetas publicadas o las del usuario autenticado
         public async Task<ActionResult<IEnumerable<RecetaDto>>> FiltrarPorIngredientes([FromQuery] List<int> ingredienteIds)
         {
             if (ingredienteIds == null || ingredienteIds.Count == 0)
@@ -81,7 +83,7 @@ namespace RecetArreAPI2.Controllers
             return Ok(mapper.Map<List<RecetaDto>>(recetas));
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}")]//aqui se puede agregar un filtro para mostrar solo las recetas publicadas o las del usuario autenticado
         public async Task<ActionResult<RecetaDto>> GetReceta(int id)
         {
             var receta = await context.Recetas
@@ -98,7 +100,7 @@ namespace RecetArreAPI2.Controllers
             return Ok(mapper.Map<RecetaDto>(receta));
         }
 
-        [HttpPost]
+        [HttpPost]//aqui se puede agregar un filtro para permitir solo a los usuarios autenticados crear recetas
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<RecetaDto>> CreateReceta(RecetaCreacionDto recetaCreacionDto)
         {
@@ -113,6 +115,8 @@ namespace RecetArreAPI2.Controllers
                 .Where(c => categoriaIds.Contains(c.Id))
                 .ToListAsync();
 
+            //si la cantidad de categorías encontradas no coincide con la cantidad de ids enviados,
+            //significa que uno o más ids no existen en la base de datos
             if (categorias.Count != categoriaIds.Count)
             {
                 return BadRequest(new { mensaje = "Una o más categorías no existen" });
@@ -128,7 +132,7 @@ namespace RecetArreAPI2.Controllers
                 return BadRequest(new { mensaje = "Uno o más ingredientes no existen" });
             }
 
-            var receta = mapper.Map<Receta>(recetaCreacionDto);
+            var receta = mapper.Map<Receta>(recetaCreacionDto);//mapea las propiedades de recetaCreacionDto a una nueva instancia de Receta
             receta.AutorId = usuarioId;
             receta.CreadoUtc = DateTime.UtcNow;
             receta.ModificadoUtc = DateTime.UtcNow;
@@ -146,7 +150,7 @@ namespace RecetArreAPI2.Controllers
             return CreatedAtAction(nameof(GetReceta), new { id = receta.Id }, mapper.Map<RecetaDto>(receta));
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int}")]//aqui se puede agregar un filtro para permitir solo al autor de la receta o a los administradores actualizar la receta
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> UpdateReceta(int id, RecetaModificacionDto recetaModificacionDto)
         {
@@ -165,7 +169,7 @@ namespace RecetArreAPI2.Controllers
             {
                 return NotFound(new { mensaje = "Receta no encontrada" });
             }
-
+            //si el usuario autenticado no es el autor de la receta, se le prohibe actualizarla
             if (receta.AutorId != usuarioId)
             {
                 return Forbid();
@@ -202,7 +206,7 @@ namespace RecetArreAPI2.Controllers
             return Ok(new { mensaje = "Receta actualizada exitosamente", data = mapper.Map<RecetaDto>(receta) });
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int}")]//aqui se puede agregar un filtro para permitir solo al autor de la receta o a los administradores eliminar la receta
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> DeleteReceta(int id)
         {

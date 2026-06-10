@@ -7,37 +7,40 @@ using RecetArreAPI2.Models;
 using System.Text;
 using System.Text.Json.Serialization;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);// Crear el builder de la aplicación
+//builder es un objeto que se utiliza para configurar y construir la aplicación web
 
-// 1. Servicios básicos y AutoMapper
+// Servicios básicos y AutoMapper
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
-// --- AQUÍ ACTIVAMOS SWAGGER EN LOS SERVICIOS ---
+// Activar Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// 2. Configurar la seguridad de Identity
+//Configurar la seguridad de Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// 3. Conexión a la base de datos (Leyendo tu appsettings de Somee)
+// Conexión a la base de datos
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    if (!string.IsNullOrEmpty(connectionString))
+    //si la cadena de conexión no es nula o vacía,
+    //se configura el contexto de la base de datos para usar SQL Server con esa cadena de conexión
+    if (!string.IsNullOrEmpty(connectionString)) 
     {
         options.UseSqlServer(connectionString);
     }
 });
 
-// 4. Configurar JWT
+//Configurar JWT
 var llaveSecreta = builder.Configuration["LlaveJWT"] ?? "IZbM86D4!LOX%a7z$AXsdvfrrHyBDyhRTUuikX@5B@NL52rRergc54!$%kSÑOKJIAUSFCIK.LQAWIUJJAV5S748D63VC2!";
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)//aqui se especifica que se va a usar JWT para la autenticación
     .AddJwtBearer(opciones => opciones.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = false,
+        ValidateIssuer = false,// No se validará el emisor del token
         ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
@@ -45,11 +48,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ClockSkew = TimeSpan.Zero
     });
 
-// 5. Configurar Controladores e ignorar ciclos
+// Configurar Controladores e ignorar ciclos
 builder.Services.AddControllers()
     .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-// 6. Configurar CORS
+// Configurar CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
@@ -62,19 +65,18 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-
-// A. ACTIVAMOS CORS PRIMERO QUE NADA
+// Activar cors
 app.UseCors("AllowAll");
 
-// B. LEVANTAMOS SWAGGER (Sin importar si es Desarrollo o Producción)
+// Levantar Swagger
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "RecetArre API V1");
-    options.RoutePrefix = "swagger"; // Esto define que entraremos mediante /swagger
+    options.RoutePrefix = "swagger"; // Esto define que se entrara mediante /swagger
 });
 
-// C. Seguridad y Controladores
+//Seguridad y Controladores
 app.UseAuthentication();
 app.UseAuthorization();
 

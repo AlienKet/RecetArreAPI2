@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-
+//En esta clase se extiende la clase IdentityUser para agregar propiedades
+//adicionales que se desean almacenar para cada usuario en la aplicación.
 namespace RecetArreAPI2.Models
 {
     public class ApplicationUser : IdentityUser

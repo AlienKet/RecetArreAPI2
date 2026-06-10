@@ -56,7 +56,7 @@ Ranking: Cual es la mejor receta
 Raiting: Puntuacion de la receta en estrellas
 
 
-http://pruebabd2026.somee.com/scalar/v1
+http://pruebabd2026.somee.com/swagger/index.html
 
 http://pruebabd2026.somee.com/web/
 
@@ -98,16 +98,3 @@ RecetArreAPI2 -> Publicar (Publish) -> Selecciona Carpeta (Folder).
 y sube todo el contenido de esa carpeta (puedes subirlo comprimido en .zip y 
 descomprimirlo allí mismo).
 
-En program.cs configurar cors: 
-
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", builder =>
-    {
-       // builder.WithOrigins("https://tu-aplicacion-recetas.vercel.app") //url de vercel
-        builder.AllowAnyOrigin() // Permite cualquier origen (Front)
-                .AllowAnyMethod() // Permite GET, POST, etc.
-                .AllowAnyHeader(); // Permite enviar el Token JWT
-    });
-});

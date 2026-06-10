@@ -9,6 +9,9 @@ using RecetArreAPI2.DTOs.Comentarios;
 
 namespace RecetArreAPI2.Mappings
 {
+    //en esta clase se definen los perfiles de mapeo para AutoMapper,
+    //que es una biblioteca que facilita la conversión entre objetos de
+    //diferentes tipos, como entidades y DTOs.
     public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile()
